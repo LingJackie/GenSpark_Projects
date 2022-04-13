@@ -25,10 +25,12 @@ public class GuessTheNumber {
     public int getTries()               { return this.tries; }
     public int getRandNum()             { return this.randNum; }
 
+
     // Constructor
     public GuessTheNumber() {
         this.name = "";
-        isGameContinuing = true;
+        this.isGameContinuing = true;
+        this.tries = 0;
     }
 
 
@@ -43,17 +45,19 @@ public class GuessTheNumber {
             System.out.println("Somethings wrong, buddy.");
         }
     }
+
+    // Returns a String response for a guess
     public String guessResponse(int guessNum){
-        if (guessNum > this.randNum) {
+        if (this.tries == this.maxTries) {
+            this.isGamePlaying = false;
+            return "You ran out of tries";
+        } else if (guessNum > this.randNum) {
             return "Your guess is too high.";
         } else if (guessNum < this.randNum) {
             return "Your guess is too low.";
         } else if (this.randNum == guessNum) {
-            isGamePlaying = false;
+            this.isGamePlaying = false;
             return "Good job, " + name + "! You guessed my number in " + tries + " guesses!";
-        }if (this.tries == this.maxTries) {
-            isGamePlaying = false;
-            return "You ran out of tries";
         }
         return "";
     }
@@ -61,7 +65,6 @@ public class GuessTheNumber {
     public void playGame(){
         int guessNum; //the guessed number
         Scanner numObj = new Scanner(System.in);
-        Scanner playAgainObj = new Scanner(System.in);
 
         while(isGameContinuing) {
             setUpNewGame();
@@ -72,10 +75,14 @@ public class GuessTheNumber {
                 }catch (Exception e){
                     guessNum = -1;
                 }
-                tries++;
+                this.tries++;
                 System.out.println(guessResponse(guessNum));
             }
+            replay();
         }
+    }
+    public void replay(){
+        Scanner playAgainObj = new Scanner(System.in);
         System.out.println("Would you like to play again?(y or n)");
         try{
             this.isGameContinuing = playAgainObj.nextLine().equals("y");
@@ -83,8 +90,8 @@ public class GuessTheNumber {
             this.isGameContinuing = false;
             System.out.println("I'm sorry something went wrong, I'll end the game");
         }
-
     }
+
     public void startGame(){
         greeting();
         playGame();
