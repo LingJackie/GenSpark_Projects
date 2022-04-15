@@ -17,21 +17,15 @@ class DragonCaveTest {
     }
 
     @Test
-    void startingMessage() {
-        assertEquals("You are in a land full of dragons. In front of you,\n" +
-                "you see 2 caves. In one cave, the dragon is friendly \n" +
-                "an will share his treasure with you. The other dragon \n" +
-                "is greedy and hungry and will eat you on sight.\n" +
-                "Which cave will you go into? (1 or 2)", testCave.startingMessage());
-    }
-
-    @Test
-    void makeChoice() {
+    void test_make_choice_1_dragon_angry() {
         System.setIn(new ByteArrayInputStream("1".getBytes()));
         assertEquals("You approach the cave...\n" +
                 "It's dark and spooky...\n" +
                 "A large dragon jumps out in front of you! He opens his jaws and...\n" +
                 "Gobbles you down in one bite!", testCave.makeChoice());
+    }
+    @Test
+    void test_make_choice_2_dragon_chill() {
         System.setIn(new ByteArrayInputStream("2".getBytes()));
         assertEquals("You approach the cave...\n" +
                 "It's well lit.\n" +
