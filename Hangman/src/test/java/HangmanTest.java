@@ -11,7 +11,7 @@ class HangmanTest {
     @BeforeEach
     void setUp() {
         testGame1 = new Hangman();
-        testGame2 = new Hangman("racecar","_______");
+        testGame2 = new Hangman("racecar","_______", 0);
     }
 
     @Test
@@ -27,10 +27,10 @@ class HangmanTest {
 
     @Test
     void updateGuess(){
-        testGame2.updateGuess("r");
+        testGame2.updateGuessBlanks("r");
         assertEquals("r_____r", testGame2.getGuessWord());
 
-        testGame2.updateGuess("e");
+        testGame2.updateGuessBlanks("e");
         assertEquals("r__e__r", testGame2.getGuessWord());
     }
 }

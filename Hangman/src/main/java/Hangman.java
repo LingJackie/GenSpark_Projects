@@ -12,7 +12,7 @@ public class Hangman {
 
     private String randWord;
     private String guessWord;
-    private String gallows = "  +---+2\n3  |   |\n      |\n      |\n      |\n      |\n=========";
+    private Gallows gallows;
     private int tries;
     private final int maxTries = 6;
 
@@ -21,21 +21,25 @@ public class Hangman {
     public String getRandWord() { return randWord; }
     public String getGuessWord(){ return guessWord; }
 
+    
+    // Constructors
     public Hangman(){
         this.randWord = genRandWord();
         this.guessWord = genBlankLines(this.randWord);
+        this.tries = 0;
+        this.gallows = new Gallows(0);
 
     }
-    public Hangman(String randWord, String guessWord){
+    public Hangman(String randWord, String guessWord, int tries){
         this.randWord = randWord;
         this.guessWord = guessWord;
+        this.tries = tries;
+        this.gallows = new Gallows(tries);
     }
-    public void updateGallows(int tries){
-        
-    }
+  
 
 
-
+    // Generates the corresponding amount of blank lines based on the inputted word
     public String genBlankLines(String randWord){
         String blanks = "";
         for(int i = 0; i< randWord.length(); i++){
@@ -44,7 +48,7 @@ public class Hangman {
         return blanks;
     }
 
-    // Grabs a random word from file containing a bunch of words
+    // Grabs a random word from a file containing a bunch of words
     public String genRandWord(){
         try{
             Path filePath = Paths.get("src/main/resources/wordlist.txt");//needs try catch
@@ -64,7 +68,8 @@ public class Hangman {
         }
     }
 
-    public void updateGuess(String letter){
+    // Replaces the blanks with a correctly guessed letter 
+    public void updateGuessBlanks(String letter){
         if( !guessWord.contains(letter) && randWord.contains(letter) ){
             Pattern patt = Pattern.compile(letter);
             Matcher matcher = patt.matcher(randWord);
@@ -87,7 +92,7 @@ public class Hangman {
             try{
                 Scanner myObj = new Scanner(System.in);
                 guessLetter = myObj.nextLine();
-                updateGuess(guessLetter);
+                updateGuessBlanks(guessLetter);
                 System.out.println(guessWord);
 
             }catch (Exception e){

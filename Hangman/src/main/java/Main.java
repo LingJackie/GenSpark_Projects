@@ -12,8 +12,10 @@ public class Main {
 
             String gallows = "  +---+2\n3  |   |\n      |\n      |\n      |\n      |\n=========";
 
+            Gallows g = new Gallows(0);
+            System.out.println(g);
 
-            System.out.println(gallows);
+        System.out.println(g.updateGallowsAscii());
 
 
 
