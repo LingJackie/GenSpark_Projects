@@ -15,18 +15,17 @@ class HangmanTest {
     }
 
     @Test
-    void genBlankLines() {
+    void test_genBlankLines() {
         assertEquals("______", testGame1.genBlankLines("jackie"));
-        assertEquals("", testGame1.genBlankLines(""));
     }
 
     @Test
-    void genRandWord() {
+    void test_genRandWord_word_generate_not_empty() {
         assertFalse(testGame1.genRandWord().length() == 0);
     }
 
     @Test
-    void updateGuess(){
+    void test_updateGuess(){
         testGame2.updateGuessBlanks("r");
         assertEquals("r_____r", testGame2.getGuessWord());
 
