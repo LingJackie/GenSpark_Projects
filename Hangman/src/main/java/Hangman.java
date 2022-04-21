@@ -131,7 +131,7 @@ public class Hangman {
     public void startGame(){
         System.out.println("HANGMAN\n"+gallows+"Missed letters:"+ missedLetters + "\n"+guessWord);
         runGame();
-        
+
         System.out.println("Do you want to play again? (yes or no)");
         try{
             Scanner myObj = new Scanner(System.in);
