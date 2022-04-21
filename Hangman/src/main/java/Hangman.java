@@ -76,7 +76,7 @@ public class Hangman {
         }
     }
 
-    // Replaces the blanks with a correctly guessed letter 
+    // Replaces each blank with a correctly guessed letter
     public void updateGuessBlanks(String letter){
         if( !guessWord.contains(letter) && randWord.contains(letter) ){
             Pattern patt = Pattern.compile(letter);
