@@ -1,17 +1,18 @@
 public class Main {
 
     public static void main(String args[]){
-        String ANSI_RESET = "\u001B[0m";
-        String ANSI_YELLOW = "\u001B[33m";
+//        GameWorld tmpWorld =new GameWorld();
+//        System.out.println(tmpWorld);
 
+//        Actor player = new Actor("jackie",10,5,10);
+//        Actor goblin = new Actor("gobby",10,5,10);
+//        System.out.println(goblin.getStats());
+//        System.out.println(goblin.attack(player));
+        HumansVsGoblins game1 = new HumansVsGoblins();
+        System.out.println(game1.getWorldMap());
+        System.out.println(game1.movePlayer("e"));
+        System.out.println(game1.getWorldMap());
 
-        System.out.println(ANSI_YELLOW + "This text is colored" + ANSI_RESET);
-        GameWorld tmpWorld =new GameWorld();
-        System.out.println(tmpWorld);
-
-        Actor player = new Actor("jackie",10,5,10);
-        Actor goblin = new Actor("gobby",10,5,10);
-        System.out.println(goblin.getStats());
-        System.out.println(goblin.attack(player));
+        System.out.println(game1.getWorldMap());
     }
 }
