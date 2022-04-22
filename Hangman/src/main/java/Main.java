@@ -10,14 +10,6 @@ public class Main {
         Hangman stuff = new Hangman("abigail", "_______", 0);
         stuff.startGame();
 
-//            String gallows = "  +---+2\n3  |   |\n      |\n      |\n      |\n      |\n=========";
-//
-//            Gallows g = new Gallows(0);
-//            System.out.println(g);
-//
-//        System.out.println(g.updateGallowsAscii());
-
-
 
     }
 }

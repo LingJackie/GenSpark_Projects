@@ -14,16 +14,16 @@ public class Hangman {
     private String guessWord;
     private Gallows gallows;
     private String missedLetters;
-    private boolean gameRunning; // default should be true that the game is still running
+    private boolean gameRunning; // True would mean that the game is still running
 
 
-    /* Helpers */
+    // Initializes/Resets everything
     public void initNewGame(){
         this.randWord = genRandWord();
         this.guessWord = genBlankLines(this.randWord);
         this.gallows = new Gallows(0);
         this.missedLetters = "";
-        this.gameRunning =  true;
+        this.gameRunning = true;
         
     }
 
@@ -91,7 +91,11 @@ public class Hangman {
 
     // Checks the guess and returns a response
     public String makeGuess(String letter){
-        if( !guessWord.contains(letter) && randWord.contains(letter) ){// Guessed correct letter
+        if(letter.length()>1){ // Inputted multiple letters
+            return "One guess at a time, please.";
+        }else if(!Character.isLetter(letter.charAt(0))){  // Input not in alphabet
+            return "Invalid Input.";
+        }else if( !guessWord.contains(letter) && randWord.contains(letter) ){// Guessed correct letter
             updateGuessBlanks(letter);
         }else if(guessWord.contains(letter) || missedLetters.contains(letter)){// Inputted an already guessed letter
             return "You have already guessed that letter. Choose again.";
@@ -99,21 +103,20 @@ public class Hangman {
             missedLetters+=letter;
             gallows.incrementState();
         }
-        return gallows.toString() + "Missed letters:" + missedLetters + "\n" + guessWord;
+        return gallows.toString() + "Missed letters:" + missedLetters + "\n" + guessWord;// Returns the gallows + incorrectly guessed letters + blanks
     }
 
     // Manages the logic for the whole game
-    public void runGame(){
+    public void gameLoop(){
+        System.out.println("HANGMAN\n"+gallows+"Missed letters:"+ missedLetters + "\n"+guessWord);
         while(gameRunning){
             try{
                 Scanner myObj = new Scanner(System.in);
                 String guessLetter = myObj.nextLine();
                 System.out.println(makeGuess(guessLetter));
-
             }catch (Exception e){
                 System.out.println("idk");
             }
-
             if(gallows.getState() == 6){
                 System.out.println("Too bad. The secret word is \"" + randWord + "\". You Lost.");
                 gameRunning = false;
@@ -124,13 +127,11 @@ public class Hangman {
                 break;
             }
         }
-
     }
 
     // starts the game
     public void startGame(){
-        System.out.println("HANGMAN\n"+gallows+"Missed letters:"+ missedLetters + "\n"+guessWord);
-        runGame();
+        gameLoop();
 
         System.out.println("Do you want to play again? (yes or no)");
         try{

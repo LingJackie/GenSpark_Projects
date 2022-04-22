@@ -13,6 +13,6 @@ public class Main {
         System.out.println(game1.movePlayer("e"));
         System.out.println(game1.getWorldMap());
 
-        System.out.println(game1.getWorldMap());
+
     }
 }
