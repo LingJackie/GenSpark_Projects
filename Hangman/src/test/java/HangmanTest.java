@@ -32,4 +32,15 @@ class HangmanTest {
         testGame2.updateGuessBlanks("e");
         assertEquals("r__e__r", testGame2.getGuessWord());
     }
+
+    @Test
+    void test_makeGuess_bad_inputs(){
+        assertEquals("One guess at a time, please.", testGame2.makeGuess("afsd"));
+        assertEquals("Invalid Input.", testGame2.makeGuess("%"));
+    }
+    @Test
+    void test_makeGuess_incorrect_guess(){
+        assertEquals("One guess at a time, please.", testGame2.makeGuess("afsd"));
+        assertEquals("Invalid Input.", testGame2.makeGuess("%"));
+    }
 }
