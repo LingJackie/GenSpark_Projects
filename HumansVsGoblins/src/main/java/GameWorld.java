@@ -1,54 +1,85 @@
-import java.nio.file.Files;
-import java.util.Random;
-
 public class GameWorld {
 
+    // COLORS
     private final String ANSI_YELLOW = "\u001B[33m";
     private final String ANSI_GREEN = "\u001B[32m";
+    private final String ANSI_CYAN = "\u001B[36m";
+    private final String ANSI_BLUE = "\u001B[34m";
     private final String ANSI_RESET = "\u001B[0m";
 
+    // LANDSCAPE SYMBOLS
+    private final String ALMOST_EQUALS_SYMBOL = "\u2248";// Sand/Water
+    private final String SPADE_SYMBOL ="\u2660"; // Tree 1
+    private final String CLUB_SYMBOL = 	"\u2663";// Tree 2
+    private final String INTERSECTION_SYMBOL = "\u2229";// Big Hill
+    private final String TRANGLE_SYMBOL =	"\u25B2";// Mountain
+    
+    
+    private Tile[][] worldMap;
+    
+    // Updates a tile at position x,y
+    public void setActorMap(int x, int y, String actorIcon){
+        worldMap[x][y].setActorIcon(actorIcon);
+    }
+    public void clearActorMap(int x, int y){
+        worldMap[x][y].clearActorIcon();
+    }
 
-    private String[][] worldMap;
-
-    public void setTile(int x, int y, String emoji){
-        worldMap[x][y] = emoji;
-    } // Updates a tile at position x,y
+    
+    public int length(){
+        return worldMap.length;
+    }
+    public int width(){
+        return worldMap[0].length;
+    }
 
     // Constructors
     public GameWorld(){
-        generateRandMap(20);
+        generateRandMap(10);
     }
-    public GameWorld(String[][] worldMap ){
+    public GameWorld(Tile[][] worldMap ){
         this.worldMap = worldMap;
     }
 
 
-    // Creates a new world map of size: size x size
-    // Randomly adds trees and stuff
+    // Creates a new world map of size: size x (size*3)
+    // Uses perrin noise
     public void generateRandMap(int size){
-        worldMap = new String[size][size];
-        //rand.nextInt((max - min) + 1) + min
-        Random rand = new Random();
-        int randNum;
-        for(int i = 0; i < size; i++){
-            for(int j = 0; j < size; j++){
-                randNum = rand.nextInt(size);
-                if(randNum < (int)size/10){
-                    worldMap[i][j] = ANSI_GREEN+"\uD83C\uDF32"+ANSI_RESET;
-                }else{
-                    worldMap[i][j] = ". ";
+        int length =size;
+        int width = size*3;
+
+        worldMap = new Tile[length][width];
+        double scale = .045;// Play around with it should be under 0.1
+        for(int i = 0; i < length; i++){
+            for(int j = 0; j < width; j++) {
+                double noiseVal = PerlinNoise.noise(i * scale, j * scale, 7);// Generates number between -1 and 1
+                if (noiseVal < -.3) {// Water
+                    worldMap[i][j] = new Tile(ANSI_BLUE + ALMOST_EQUALS_SYMBOL + ANSI_RESET);
+                } else if (noiseVal < -.25) {// Sand
+                    worldMap[i][j] = new Tile(ANSI_YELLOW + ALMOST_EQUALS_SYMBOL + ANSI_RESET);
+                } else if (noiseVal < 0) {// Grasslands
+                    worldMap[i][j] = new Tile(ANSI_GREEN + "=" + ANSI_RESET);
+                } else if (noiseVal < .2) {// Forest1
+                    worldMap[i][j] = new Tile(ANSI_GREEN + CLUB_SYMBOL + ANSI_RESET);
+                } else if (noiseVal < .3) {// Forest2
+                    worldMap[i][j] = new Tile(ANSI_GREEN + SPADE_SYMBOL + ANSI_RESET);
+                } else if (noiseVal < .4) {// Low Hills
+                    worldMap[i][j] = new Tile(ANSI_GREEN + "n" + ANSI_RESET);
+                } else if (noiseVal < .6) {// Tall Hills
+                    worldMap[i][j] = new Tile(ANSI_GREEN + INTERSECTION_SYMBOL + ANSI_RESET);
+                } else if (noiseVal <= 1) {// Mountain
+                    worldMap[i][j] = new Tile(TRANGLE_SYMBOL);
                 }
             }
         }
-
     }
 
     @Override
     public String toString() {
         String tmp = "";
-        for(String[] row:worldMap){
-            for(String s:row){
-                tmp+= " " + s;
+        for(Tile[] row:worldMap){
+            for(Tile s:row){
+                tmp+= s.toString();
             }
             tmp+="\n";
         }

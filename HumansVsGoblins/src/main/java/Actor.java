@@ -30,9 +30,7 @@ public class Actor {
     public int getX()           { return locx; }
     public int getY()           { return locy; }
 
-    public void setX(int x) { locx=x;}
-    public void setY(int y) { locy=y;}
-
+    public void setLocation(int x, int y) { locx=x; locy=y; }
 
     public boolean isDead(){
         return currHealth <= 0;
@@ -49,8 +47,6 @@ public class Actor {
         maxHealth = constitution*10;
         currHealth = maxHealth;
         initiative = 0;
-
-
 
         locx=0;
         locy=0;
