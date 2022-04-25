@@ -14,15 +14,21 @@ public class GameWorld {
     private final String INTERSECTION_SYMBOL = "\u2229";// Big Hill
     private final String TRANGLE_SYMBOL =	"\u25B2";// Mountain
     
-    
+
+
     private Tile[][] worldMap;
     
-    // Updates a tile at position x,y
+    // Updates a tile at position x,y with an actor's icon
     public void setActorMap(int x, int y, String actorIcon){
         worldMap[x][y].setActorIcon(actorIcon);
     }
+    // Clears said actor's emoji
     public void clearActorMap(int x, int y){
         worldMap[x][y].clearActorIcon();
+    }
+    // When player and goblin overlap a crossed sword icon will appear there
+    public void toggleMapCombatMarker(int x, int y){
+        worldMap[x][y].toggleCombatMarker();
     }
 
     
@@ -35,7 +41,7 @@ public class GameWorld {
 
     // Constructors
     public GameWorld(){
-        generateRandMap(10);
+        generateRandMap(5);
     }
     public GameWorld(Tile[][] worldMap ){
         this.worldMap = worldMap;
@@ -43,7 +49,7 @@ public class GameWorld {
 
 
     // Creates a new world map of size: size x (size*3)
-    // Uses perrin noise
+    // Uses perlin noise
     public void generateRandMap(int size){
         int length =size;
         int width = size*3;

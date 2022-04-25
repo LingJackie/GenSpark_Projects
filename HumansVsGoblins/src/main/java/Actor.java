@@ -3,10 +3,12 @@ public class Actor {
     protected final String ANSI_YELLOW = "\u001B[33m";
     protected final String ANSI_GREEN = "\u001B[32m";
     protected final String ANSI_PURPLE = "\u001B[35m";
+    protected final String ANSI_RED = "\u001B[31m";
     protected final String ANSI_RESET = "\u001B[0m";
 
     protected final String COWBOY_EMOJI = "\uD83E\uDD20";
     protected final String HORN_EMOJI = "\uD83D\uDE08";
+    protected final String DEAD_EMOJI ="\u2620";
 
 
     private String name;
@@ -25,15 +27,18 @@ public class Actor {
     int locx;// x location on map
     int locy;// y location on map
 
-    public String getHealth()   { return currHealth +"/"+ maxHealth; }
+    public String getHealthRatio()   { return currHealth +"/"+ maxHealth; }
     public String getName()     { return name; }
     public int getX()           { return locx; }
     public int getY()           { return locy; }
 
     public void setLocation(int x, int y) { locx=x; locy=y; }
 
-    public boolean isDead(){
-        return currHealth <= 0;
+    public boolean isDead() { return currHealth <= 0; }
+    // Checks if actor is dead and updates icon to a skull if they are
+    public String setDead(){
+        icon = DEAD_EMOJI;
+        return name + " has died.";
     }
 
     // Constructor
@@ -92,6 +97,23 @@ public class Actor {
             default:
                 return name + " stays put.";
         }
+    }
+
+    public String displayHealthBar(){
+        double ratio = currHealth/maxHealth;
+        String bar = "HP:"+ANSI_RED;
+        if(ratio <= .2){
+            bar+="#"+ANSI_RESET+"++++";
+        }else if(ratio <= .4){
+            bar+="##"+ANSI_RESET+"+++";
+        }else if(ratio <= .6){
+            bar+="###"+ANSI_RESET+"++";
+        }else if(ratio <= .8){
+            bar+="####"+ANSI_RESET+"+";
+        }else{
+            bar+="#####"+ANSI_RESET;
+        }
+       return this.toString() + " " + name +"\n"+bar+" "+getHealthRatio();
     }
 
     @Override
