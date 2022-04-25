@@ -100,8 +100,9 @@ public class Actor {
     }
 
     public String displayHealthBar(){
-        double ratio = currHealth/maxHealth;
+        double ratio = (double)currHealth/maxHealth;
         String bar = "HP:"+ANSI_RED;
+        System.out.println("RATIO:"+ratio);
         if(ratio <= .2){
             bar+="#"+ANSI_RESET+"++++";
         }else if(ratio <= .4){

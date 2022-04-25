@@ -31,7 +31,16 @@ public class GameWorld {
         worldMap[x][y].toggleCombatMarker();
     }
 
-    
+
+
+    public boolean isOutOfBounds(int x, int y){
+        try{
+            Tile stuff = worldMap[x][y];
+            return false;
+        }catch(Exception e){
+            return true;
+        }
+    }
     public int length(){
         return worldMap.length;
     }
@@ -41,7 +50,7 @@ public class GameWorld {
 
     // Constructors
     public GameWorld(){
-        generateRandMap(5);
+        generateRandMap(4);
     }
     public GameWorld(Tile[][] worldMap ){
         this.worldMap = worldMap;

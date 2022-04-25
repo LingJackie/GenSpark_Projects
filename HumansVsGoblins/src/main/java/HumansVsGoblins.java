@@ -24,7 +24,12 @@ public class HumansVsGoblins {
     public HumansVsGoblins(){
         world = new GameWorld();
         player = new Human("jackie",10,5,10);
-        this.generateGoblins(3);
+
+        // Scales goblin horde size based off world size
+        int numTiles = world.length()* world.width();
+        int hordeSize = (numTiles/75)+1;
+        this.generateGoblins(hordeSize);
+
         world.setActorMap(player.getX(), player.getY(), player.toString());
         this. updateGoblinIcons();
         combatRunning = false;
@@ -44,10 +49,19 @@ public class HumansVsGoblins {
 
     // Moves player based on "n","s","e","w" inputs
     public String movePlayer(String direction){
-        world.clearActorMap(player.getX(), player.getY());// Clears original position of player icon
-        String message = player.move(direction);
-        world.setActorMap(player.getX(), player.getY(), player.toString());// puts emoji in new position
-        return message;
+        int oldX = player.getX();
+        int oldY = player.getY();
+        String message = player.move(direction);// Moves player
+        if(!world.isOutOfBounds(player.getX(),player.getY())){// Checks if new position is out of bounds
+            world.clearActorMap(oldX, oldY);// Clears original position of player icon
+            world.setActorMap(player.getX(), player.getY(), player.toString());// puts icon in new position
+            return message;
+        }else{
+            player.setLocation(oldX,oldY);
+            return "Can't go that way";
+        }
+
+
     }
 
     // Creates new goblins based on hordeSize

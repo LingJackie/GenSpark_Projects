@@ -1,8 +1,8 @@
 public class Tile {
 
     private final String CROSSED_SWORDS_EMOJI = "\u2694";
-    protected final String ANSI_RED = "\u001B[31m";
-    protected final String ANSI_RESET = "\u001B[0m";
+    private final String ANSI_RED = "\u001B[31m";
+    private final String ANSI_RESET = "\u001B[0m";
 
     private String baseLandscape;
     private String actorIcon;
