@@ -1,20 +1,5 @@
 public class GameWorld {
 
-    // COLORS
-    private final String ANSI_YELLOW = "\u001B[33m";
-    private final String ANSI_GREEN = "\u001B[32m";
-    private final String ANSI_CYAN = "\u001B[36m";
-    private final String ANSI_BLUE = "\u001B[34m";
-    private final String ANSI_RESET = "\u001B[0m";
-
-    // LANDSCAPE SYMBOLS
-    private final String ALMOST_EQUALS_SYMBOL = "\u2248";// Sand/Water
-    private final String SPADE_SYMBOL ="\u2660"; // Tree 1
-    private final String CLUB_SYMBOL = 	"\u2663";// Tree 2
-    private final String INTERSECTION_SYMBOL = "\u2229";// Big Hill
-    private final String TRANGLE_SYMBOL =	"\u25B2";// Mountain
-    
-
 
     private Tile[][] worldMap;
     
@@ -49,12 +34,9 @@ public class GameWorld {
     }
 
     // Constructors
-    public GameWorld(){
-        generateRandMap(4);
-    }
-    public GameWorld(Tile[][] worldMap ){
-        this.worldMap = worldMap;
-    }
+    public GameWorld()                      { generateRandMap(4); }
+    public GameWorld(int worldSize)         { generateRandMap(worldSize); }
+    public GameWorld(Tile[][] worldMap)     { this.worldMap = worldMap; }
 
 
     // Creates a new world map of size: size x (size*3)
@@ -69,21 +51,21 @@ public class GameWorld {
             for(int j = 0; j < width; j++) {
                 double noiseVal = PerlinNoise.noise(i * scale, j * scale, 7);// Generates number between -1 and 1
                 if (noiseVal < -.3) {// Water
-                    worldMap[i][j] = new Tile(ANSI_BLUE + ALMOST_EQUALS_SYMBOL + ANSI_RESET);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.WATER);
                 } else if (noiseVal < -.25) {// Sand
-                    worldMap[i][j] = new Tile(ANSI_YELLOW + ALMOST_EQUALS_SYMBOL + ANSI_RESET);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.SAND);
                 } else if (noiseVal < 0) {// Grasslands
-                    worldMap[i][j] = new Tile(ANSI_GREEN + "=" + ANSI_RESET);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.GRASS);
                 } else if (noiseVal < .2) {// Forest1
-                    worldMap[i][j] = new Tile(ANSI_GREEN + CLUB_SYMBOL + ANSI_RESET);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.TREE1);
                 } else if (noiseVal < .3) {// Forest2
-                    worldMap[i][j] = new Tile(ANSI_GREEN + SPADE_SYMBOL + ANSI_RESET);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.TREE2);
                 } else if (noiseVal < .4) {// Low Hills
-                    worldMap[i][j] = new Tile(ANSI_GREEN + "n" + ANSI_RESET);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.LOW_HILL);
                 } else if (noiseVal < .6) {// Tall Hills
-                    worldMap[i][j] = new Tile(ANSI_GREEN + INTERSECTION_SYMBOL + ANSI_RESET);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.TALL_HILL);
                 } else if (noiseVal <= 1) {// Mountain
-                    worldMap[i][j] = new Tile(TRANGLE_SYMBOL);
+                    worldMap[i][j] = new Tile(ColorAndEmoji.MOUNTAIN);
                 }
             }
         }

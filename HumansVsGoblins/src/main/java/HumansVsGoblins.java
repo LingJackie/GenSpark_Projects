@@ -1,40 +1,69 @@
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class HumansVsGoblins {
 
 
 
     private GameWorld world;
-    private Actor player;
+    private Human player;
     private ArrayList<Goblin> goblinHorde = new ArrayList<Goblin>();
-    private Goblin engagedEnemy; // Currently engaged goblin
+    private Goblin engagedEnemy; // Current combat engaged goblin
+    private Dice gameDice;
 
     private boolean combatRunning;
     private boolean gameRunning;
+
+    private Queue<Actor> combatQueue;
 
 
     public String getWorldMap(){
         return world.toString();
     }
+    public Human getPlayer()   {
+        return player;
+    }
 
+    public void addGoblin(Goblin g){
+        goblinHorde.add(g);
+    }
 
+    // Default constructor
     public HumansVsGoblins(){
         world = new GameWorld();
-        player = new Human("jackie",10,5,10);
+        player = new Human("Steve",5,5,5, true);
+        world.setActorMap(player.getX(), player.getY(), player.toString());
 
         // Scales goblin horde size based off world size
         int numTiles = world.length()* world.width();
         int hordeSize = (numTiles/75)+1;
         this.generateGoblins(hordeSize);
+        this.updateGoblinIcons();
 
-        world.setActorMap(player.getX(), player.getY(), player.toString());
-        this. updateGoblinIcons();
+        gameDice = new Dice();
         combatRunning = false;
         gameRunning = true;
+
+        combatQueue = new LinkedList<Actor>();
+
     }
+    // Constructor used for testing
+    public HumansVsGoblins(int worldSize, int hordeSize){
+        world = new GameWorld(worldSize);
+        player = new Human("Steve",5,5,5, true);
+        world.setActorMap(player.getX(), player.getY(), player.toString());
+
+        this.generateGoblins(hordeSize);
+        this.updateGoblinIcons();
+
+        gameDice = new Dice();
+        combatRunning = false;
+        gameRunning = true;
+
+        combatQueue = new LinkedList<Actor>();
+    }
+
+
 
     /*===== WORLD SETUP =====*/
     // Generates a random index from within the world map
@@ -58,10 +87,8 @@ public class HumansVsGoblins {
             return message;
         }else{
             player.setLocation(oldX,oldY);
-            return "Can't go that way";
+            return "You cannot go that way.";
         }
-
-
     }
 
     // Creates new goblins based on hordeSize
@@ -73,12 +100,16 @@ public class HumansVsGoblins {
     }
 
     public void updateGoblinIcons(){
-        //world.setTile(player.getX(), player.getY(), player.toString());
         for(Goblin g: goblinHorde){
             world.setActorMap(g.getX(), g.getY(), g.toString());
         }
     }
 
+    public void promptName(){
+        System.out.println("Input a username:");
+        Scanner myObj = new Scanner(System.in);
+        player.setName(myObj.nextLine());
+    }
 
 
     /*===== COMBAT STUFF =====*/
@@ -86,16 +117,18 @@ public class HumansVsGoblins {
     public void initCombat(Goblin g){
         combatRunning = true;
         world.toggleMapCombatMarker(g.getX(),g.getY());// toggles on a map combat marker
-        engagedEnemy = g;
+        engagedEnemy = g; // Sets the current engaged enemy
     }
-    public void endCombat(Goblin g){
+    public void endCombat(){
         combatRunning = false;
-        world.toggleMapCombatMarker(g.getX(),g.getY());// toggles off map combat marker
+        world.toggleMapCombatMarker(player.getX(),player.getY());// toggles off map combat marker
+        this.updateGoblinIcons();
         engagedEnemy = null;
+        combatQueue.clear();
     }
 
     // Checks if a goblin and player occupies the same tile, if so it will initialize combat
-    public boolean checkCombat(){
+    public boolean checkCombatStart(){
         for(Goblin g: goblinHorde){
             // Checks player and goblin positions as well as if goblin is already dead
             if(g.getX() == player.getX() && g.getY() == player.getY() && !g.isDead()){
@@ -105,32 +138,76 @@ public class HumansVsGoblins {
         }
         return false;
     }
-
-    public void combatLoop(){
-        while(combatRunning){
-            System.out.println("Make your move.(Fight: attack; Leave: n, s, e, w)");
-            Scanner myObj = new Scanner(System.in);
-            System.out.println(this.combatActions(myObj.nextLine()));
-            System.out.println(player.displayHealthBar());// Displays health bar
-            System.out.println(engagedEnemy.displayHealthBar());// Displays health bar
-
-            if(engagedEnemy.isDead()){
-                System.out.println(engagedEnemy.setDead());
-                endCombat(engagedEnemy);
-
+    public String deathHandler(Actor someDude){
+        String message = "";
+        if(someDude!=null && someDude.isDead()){
+            endCombat();
+            message += someDude.setDead();
+            if(someDude.isPlayable()){
+                gameRunning = false;
+                message += "\nGAME OVER";
             }
+        }
+        return message;
+    }
+    public String rollInitiative(int diceRoll1, int diceRoll2){
+        int playerInitiative = player.getDexterity() + diceRoll1;
+        int goblinInitiative = engagedEnemy.getDexterity() + diceRoll2;
+        String message = player.getName() + " Initiative:" + playerInitiative + "   "
+                + engagedEnemy.getName() + " Initiative:" + goblinInitiative+"\n";
+        if(playerInitiative>goblinInitiative){
+            combatQueue.add(player);
+            combatQueue.add(engagedEnemy);
+            return message + player.getName()+ " starts first.";
+        }else{
+            combatQueue.add(engagedEnemy);
+            combatQueue.add(player);
+            return message + engagedEnemy.getName()+ " starts first.";
         }
 
     }
-
+    // Prompts player for a combat action
+    public String playerCombatTurn(){
+        System.out.println("Your turn:\n<attack>    <leave>");
+        Scanner myObj = new Scanner(System.in);
+        return this.combatActions(myObj.nextLine());
+    }
+    public String goblinCombatTurn(){
+        return engagedEnemy.attack(player, gameDice.rollD10());
+    }
+    // Actions player can perform during combat
     public String combatActions(String action){
         switch (action){
             case "attack":
-                return player.attack(engagedEnemy) +"\n"+ engagedEnemy.attack(player);
+                return player.attack(engagedEnemy, gameDice.rollD10());
+            case "leave":
+                endCombat();
+                return "You chicken out and leave.";
             default:
                 return "Not a valid action.";
         }
     }
+
+    public void combatLoop(){
+        while(combatRunning){
+            System.out.println(player.displayHealthBar());// Displays player health bar
+            System.out.println(engagedEnemy.displayHealthBar());// Displays goblin health bar
+
+            // Checks whose turn it is
+            if(combatQueue.peek().isPlayable()){
+                System.out.println(playerCombatTurn());
+            }else{
+                System.out.println(goblinCombatTurn());
+            }
+            combatQueue.add(combatQueue.remove());
+
+            System.out.println(deathHandler(player));// Checks if player has died
+            System.out.println(deathHandler(engagedEnemy));// Checks if goblin has died
+
+        }
+
+    }
+
 
     public void gameLoop(){
         while(gameRunning){
@@ -143,16 +220,21 @@ public class HumansVsGoblins {
                 System.out.println(this.movePlayer(myObj.nextLine()));
                 this.updateGoblinIcons();
 
-                if(this.checkCombat()){
+                if(this.checkCombatStart()){
+                    System.out.println(this.getWorldMap());// Redisplay map, but it now has a combat indicator
                     System.out.println("Combat has started.");
-                    System.out.println(this.getWorldMap());// Displays map
+                    System.out.println(this.rollInitiative(gameDice.rollD20(), gameDice.rollD20()));
                     combatLoop();
                 }
             }catch (Exception e){
-                System.out.println("idk");
+                System.out.println("Something went wrong in the game loop.");
             }
 
 
         }
+    }
+    public void startGame(){
+        promptName();
+        gameLoop();
     }
 }

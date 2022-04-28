@@ -1,45 +1,44 @@
 public class Actor {
-    // Colors and emojis
-    protected final String ANSI_YELLOW = "\u001B[33m";
-    protected final String ANSI_GREEN = "\u001B[32m";
-    protected final String ANSI_PURPLE = "\u001B[35m";
-    protected final String ANSI_RED = "\u001B[31m";
-    protected final String ANSI_RESET = "\u001B[0m";
 
-    protected final String COWBOY_EMOJI = "\uD83E\uDD20";
-    protected final String HORN_EMOJI = "\uD83D\uDE08";
+
     protected final String DEAD_EMOJI ="\u2620";
 
 
     private String name;
+
     private int strength;// Determines damage dealt
     private int constitution;// Determines health
     private int dexterity;// Determines initiative
 
     private int attackPower;// Derived from strength and weapon stats
     private int maxHealth;// Derived from constitution and maybe armor
-    private int initiative;// Derived from dexterity
+
 
     private int currHealth;
 
+    protected boolean playable;
     protected String icon;
 
-    int locx;// x location on map
-    int locy;// y location on map
+    int x;// x location on map
+    int y;// y location on map
 
-    public String getHealthRatio()   { return currHealth +"/"+ maxHealth; }
-    public String getName()     { return name; }
-    public int getX()           { return locx; }
-    public int getY()           { return locy; }
+    public String getHealthRatio()  { return currHealth +"/"+ maxHealth; }
+    public String getName()         { return name; }
+    public int getDexterity()       { return dexterity; }
+    public int getX()               { return x; }
+    public int getY()               { return y; }
 
-    public void setLocation(int x, int y) { locx=x; locy=y; }
-
-    public boolean isDead() { return currHealth <= 0; }
     // Checks if actor is dead and updates icon to a skull if they are
     public String setDead(){
         icon = DEAD_EMOJI;
         return name + " has died.";
     }
+    public void setLocation(int x, int y)   { this.x=x; this.y=y; }
+    public void setName(String name)        { this.name = name;}
+
+    public boolean isDead()     { return currHealth <= 0; }
+    public boolean isPlayable() { return playable; }
+
 
     // Constructor
     public Actor(String name, int strength, int constitution, int dexterity){
@@ -48,17 +47,17 @@ public class Actor {
         this.constitution = constitution;
         this.dexterity = dexterity;
 
-        attackPower = strength*2;
+        attackPower = strength;
         maxHealth = constitution*10;
         currHealth = maxHealth;
-        initiative = 0;
 
-        locx=0;
-        locy=0;
+        x=0;
+        y=0;
     }
 
     public String takeDamage(int damage){
         currHealth -= damage;
+        currHealth = currHealth<0?0:currHealth;
         return name + " has taken " + damage + " damage";
     }
     public String heal(int healedAmt){
@@ -66,9 +65,11 @@ public class Actor {
         return name + " has healed for " + healedAmt + " health";
     }
 
-    public String attack(Actor someDude){// In the future have it take a Weapon object as a parameter
-        someDude.takeDamage(this.attackPower);
-        return this.name +" attacks "+ someDude.getName() + "\n" + someDude.getName() +" takes " + attackPower + " damage.";
+    // Total damage should be attackPower+diceRoll+(weapon damage)
+    public String attack(Actor someDude, int diceRoll){// In the future have it take a Weapon object as a parameter
+        int totalDamageDealt = this.attackPower+diceRoll;
+        someDude.takeDamage(totalDamageDealt);
+        return this.name +" attacks "+ someDude.getName() + "\n" + someDude.getName() +" takes " + totalDamageDealt + " damage.";
     }
 
     public String showStats(){
@@ -83,16 +84,16 @@ public class Actor {
     public String move(String direction){
         switch (direction){
             case "n":
-                locx--;
+                x--;
                 return name + " moves north.";
             case "s":
-                locx++;
+                x++;
                 return name + " moves south.";
             case "e":
-                locy++;
+                y++;
                 return name + " moves east.";
             case "w":
-                locy--;
+                y--;
                 return name + " moves west.";
             default:
                 return name + " stays put.";
@@ -101,18 +102,21 @@ public class Actor {
 
     public String displayHealthBar(){
         double ratio = (double)currHealth/maxHealth;
-        String bar = "HP:"+ANSI_RED;
-        System.out.println("RATIO:"+ratio);
-        if(ratio <= .2){
-            bar+="#"+ANSI_RESET+"++++";
-        }else if(ratio <= .4){
-            bar+="##"+ANSI_RESET+"+++";
-        }else if(ratio <= .6){
-            bar+="###"+ANSI_RESET+"++";
-        }else if(ratio <= .8){
-            bar+="####"+ANSI_RESET+"+";
+        String bar = "HP:"+ ColorAndEmoji.ANSI_RED;
+        if(ratio <= .14){
+            bar+="#"+ ColorAndEmoji.ANSI_RESET+"++++++";
+        }else if(ratio <= .28){
+            bar+="##"+ ColorAndEmoji.ANSI_RESET+"+++++";
+        }else if(ratio <= .42){
+            bar+="###"+ ColorAndEmoji.ANSI_RESET+"++++";
+        }else if(ratio <= .56){
+            bar+="####"+ ColorAndEmoji.ANSI_RESET+"+++";
+        }else if(ratio <= .7){
+            bar+="#####"+ ColorAndEmoji.ANSI_RESET+"++";
+        }else if(ratio <= .84){
+            bar+="######"+ ColorAndEmoji.ANSI_RESET+"+";
         }else{
-            bar+="#####"+ANSI_RESET;
+            bar+="#######"+ ColorAndEmoji.ANSI_RESET;
         }
        return this.toString() + " " + name +"\n"+bar+" "+getHealthRatio();
     }
