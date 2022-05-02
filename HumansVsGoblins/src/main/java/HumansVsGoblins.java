@@ -150,6 +150,7 @@ public class HumansVsGoblins {
         }
         return message;
     }
+    // Determines whose turn starts first in combat; Highest initiative starts first
     public String rollInitiative(int diceRoll1, int diceRoll2){
         int playerInitiative = player.getDexterity() + diceRoll1;
         int goblinInitiative = engagedEnemy.getDexterity() + diceRoll2;
