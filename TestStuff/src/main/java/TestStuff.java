@@ -153,9 +153,16 @@ public class TestStuff {
 //        st.push(-1); st.push(-14); st.push(-8); st.push(-3); st.push(15); st.push(1); st.push(8); st.push(0);
 //        Stack<Integer> sorted = organizeStack(st);
 
-        Object tmp = queryTheFile();
-        int[] arr = new int[0];
-        IntStream stream = Arrays.stream(arr);
+//        Object tmp = queryTheFile();
+//        int[] arr = new int[0];
+//        IntStream stream = Arrays.stream(arr);
+
+
+        List<String> letters = Arrays.asList("a", "b", "c", "d", "e");
+        String result = letters
+                .stream()
+                .reduce("", (partialString, element) -> partialString + element);
+//        System.out.print(result.equals("abcde"));
 
     }
 

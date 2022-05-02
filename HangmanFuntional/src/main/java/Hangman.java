@@ -1,9 +1,7 @@
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,11 +47,10 @@ public class Hangman {
 
     // Generates the corresponding amount of blank lines based on the inputted word
     public String genBlankLines(String randWord){
-        String blanks = "";
-        for(int i = 0; i< randWord.length(); i++){
-            blanks +="_";
-        }
-        return blanks;
+        ArrayList<String> tmpArr = new ArrayList<String>(Arrays.asList(randWord.split("")));
+        return tmpArr.stream()
+                    .reduce("", (partialString, element) -> partialString + "_");
+
     }
 
     // Grabs a random word from a file containing a bunch of words
@@ -62,15 +59,8 @@ public class Hangman {
             Path filePath = Paths.get("src/main/resources/wordlist.txt");//needs try catch
             Random rand = new Random();
             int randNum = rand.nextInt( (int)Files.lines(filePath).parallel().count() );
-
-            int count = 0;
-            for (String line : Files.readAllLines(filePath)) {
-                if(count == randNum){
-                    return line;
-                }
-                count++;
-            }
-            return "";
+            List<String> words = Files.readAllLines(filePath);
+            return words.get(randNum);
         }catch(Exception e){
             return "";
         }

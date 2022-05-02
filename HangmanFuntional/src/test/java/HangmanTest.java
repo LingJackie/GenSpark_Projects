@@ -14,9 +14,11 @@ class HangmanTest {
         testGame2 = new Hangman("racecar","_______", 0);
     }
 
+
     @Test
     void test_genBlankLines() {
         assertEquals("______", testGame1.genBlankLines("jackie"));
+        assertEquals("_", testGame1.genBlankLines("a"));
     }
 
     @Test
