@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class Hangman {
 
@@ -12,15 +13,19 @@ public class Hangman {
     private String guessWord;
     private Gallows gallows;
     private String missedLetters;
+    private String correctLetters;
     private boolean gameRunning; // True would mean that the game is still running
+
+    private ScoreBoard scoreBoard;
 
 
     // Initializes/Resets everything
-    public void initNewGame(){
+    private void initNewGame(){
         this.randWord = genRandWord();
         this.guessWord = genBlankLines(this.randWord);
         this.gallows = new Gallows(0);
         this.missedLetters = "";
+        this.correctLetters = "";
         this.gameRunning = true;
         
     }
@@ -32,15 +37,18 @@ public class Hangman {
     
     // Constructors
     public Hangman(){
-        initNewGame();
+        this.initNewGame();
+        scoreBoard = new ScoreBoard("player");
     }
 
-    public Hangman(String randWord, String guessWord, int tries){
+    public Hangman(String randWord, String guessWord, int tries, String name){
         this.randWord = randWord;
         this.guessWord = guessWord;
         this.gallows = new Gallows(tries);
         this.missedLetters = "";
+        this.correctLetters = "";
         this.gameRunning =  true;
+        scoreBoard = new ScoreBoard(name);
     }
   
 
@@ -66,16 +74,20 @@ public class Hangman {
         }
     }
 
+    public String replaceWithBlank(String letter){
+        if(correctLetters.contains(letter)){
+            return letter;
+        }else{
+            return "_";
+        }
+    }
     // Replaces each blank with a correctly guessed letter
     public void updateGuessBlanks(String letter){
         if( !guessWord.contains(letter) && randWord.contains(letter) ){
-            Pattern patt = Pattern.compile(letter);
-            Matcher matcher = patt.matcher(randWord);
-
-            // Finds all the indices of where there is an occurrence of letter in randWord and updates guessWord accordingly
-            while(matcher.find()) {
-                guessWord = guessWord.substring(0, matcher.start()) + letter + guessWord.substring(matcher.start()+1);
-            }
+            correctLetters+=letter;
+            guessWord=Arrays.asList(randWord.split("")).stream()
+                                                            .map(l -> replaceWithBlank(l))
+                                                            .reduce("",(partialStr,l) -> partialStr+l);
         }
     }
 
@@ -96,6 +108,21 @@ public class Hangman {
         return gallows.toString() + "Missed letters:" + missedLetters + "\n" + guessWord;// Returns the gallows + incorrectly guessed letters + blanks
     }
 
+    // Checks if the player has used up all tries or if they correctly guessed the right word
+    // Returns a message to the player
+    private String checkGameEnded(){
+        String message="";
+        if(gallows.getState() == 6){
+            message="Too bad. The secret word is \"" + randWord + "\". You Lost.";
+            gameRunning = false;
+        }if(guessWord.equals(randWord)){
+            message="Yes! The secret word is \"" + randWord + "\". You have won!";
+            gameRunning = false;
+            scoreBoard.addScore(randWord.length()*10);// If solved add score
+        }
+        return message;
+    }
+
     // Manages the logic for the whole game
     public void gameLoop(){
         System.out.println("HANGMAN\n"+gallows+"Missed letters:"+ missedLetters + "\n"+guessWord);
@@ -104,24 +131,11 @@ public class Hangman {
                 Scanner myObj = new Scanner(System.in);
                 String guessLetter = myObj.nextLine();
                 System.out.println(makeGuess(guessLetter));
+                System.out.println(checkGameEnded());
             }catch (Exception e){
-                System.out.println("idk");
-            }
-            if(gallows.getState() == 6){
-                System.out.println("Too bad. The secret word is \"" + randWord + "\". You Lost.");
-                gameRunning = false;
-                break;
-            }if(guessWord.equals(randWord)){
-                System.out.println("Yes! The secret word is \"" + randWord + "\". You have won!");
-                gameRunning = false;
-                break;
+                System.out.println("Something Went wrong.");
             }
         }
-    }
-
-    // starts the game
-    public void startGame(){
-        gameLoop();
 
         System.out.println("Do you want to play again? (yes or no)");
         try{
@@ -129,13 +143,28 @@ public class Hangman {
             String replay = myObj.nextLine();
             if(replay.equals("yes") || replay.equals("y")){
                 initNewGame();
-                startGame();
+                gameLoop();
             }else{
-                System.out.println("Game will now terminate.");
+                System.out.println("Game will now terminate. Your total score is: " + scoreBoard.getScore());// Once game ends save score to a file
+                scoreBoard.saveScore();
+                System.out.println(scoreBoard.checkHighScore());
             }
         }catch (Exception e){
-            System.out.println("idk");
+            System.out.println("Error. Something went wrong. Game will now terminate. ");
         }
+    }
+
+    // Starts the game
+    public void startGame(){
+        System.out.println("Enter your name to start:");
+        try{
+            Scanner myObj = new Scanner(System.in);
+            scoreBoard.setName(myObj.nextLine());
+        }catch (Exception e){
+            System.out.println("Name invalid. Game will proceed.");
+        }
+        gameLoop();
+
 
     }
 

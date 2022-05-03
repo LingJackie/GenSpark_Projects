@@ -11,7 +11,7 @@ class HangmanTest {
     @BeforeEach
     void setUp() {
         testGame1 = new Hangman();
-        testGame2 = new Hangman("racecar","_______", 0);
+        testGame2 = new Hangman("racecar","_______", 0,"test_player2");
     }
 
 
