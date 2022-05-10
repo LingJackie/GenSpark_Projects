@@ -13,14 +13,14 @@ public class Main {
 //        Hangman stuff = new Hangman("abigail", "_______", 0,"player");
 //        stuff.startGame();
 
-        Hangman game = new Hangman();
-        game.startGame();
+//        Hangman game = new Hangman();
+//        game.startGame();
 
-//        try{
-//            List<String> words = Files.readAllLines(Paths.get("src/main/resources/gallows2.txt"));
-//           System.out.print(words.stream().reduce("", (partialGallows, elem) -> partialGallows+elem+"\n"));
-//        }catch (IOException e) {
-//        }
+        try{
+            List<String> words = Files.readAllLines(Paths.get("src/main/resources/gallows2.txt"));
+           System.out.print(words.stream().reduce("", (partialGallows, elem) -> partialGallows+elem+"\n"));
+        }catch (IOException e) {
+        }
 
     }
 }
