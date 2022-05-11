@@ -4,6 +4,8 @@ module com.example.humansvsgoblinsgui {
 
     requires org.controlsfx.controls;
 
-    opens com.example.humansvsgoblinsgui to javafx.fxml;
-    exports com.example.humansvsgoblinsgui;
+    opens com.example.gamegui to javafx.fxml;
+    exports com.example.gamegui;
+    exports misc;
+    opens misc to javafx.fxml;
 }

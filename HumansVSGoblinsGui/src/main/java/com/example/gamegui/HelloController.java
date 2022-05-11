@@ -1,4 +1,4 @@
-package com.example.humansvsgoblinsgui;
+package com.example.gamegui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
