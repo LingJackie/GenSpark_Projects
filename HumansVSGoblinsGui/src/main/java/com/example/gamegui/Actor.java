@@ -1,7 +1,11 @@
 package com.example.gamegui;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import misc.Coord;
+
+import java.io.FileNotFoundException;
 
 import static misc.Constants.spriteDimension;
 
@@ -40,6 +44,15 @@ public class Actor {
         return name + " has died.";
     }
     public void setName(String name)        { this.name = name;}
+    public void setSprite(String imgName) throws FileNotFoundException {
+        Image img = new Image(getClass().getResourceAsStream(imgName));
+        this.getSprite().setFill(new ImagePattern(img));
+    }
+    public void setLoc(int x, int y){
+        actorCoord.setX(x);
+        actorCoord.setY(y);
+        updateSpriteLoc();
+    }
 
     public Rectangle getSprite()    { return sprite; }
 
@@ -50,11 +63,14 @@ public class Actor {
 
     private void initSprite(){
         sprite = new Rectangle();
-        sprite.setX(0);
-        sprite.setY(0);
         sprite.setWidth(spriteDimension);
         sprite.setHeight(spriteDimension);
         sprite.setFill(Color.BLACK);
+        updateSpriteLoc();
+    }
+    private void updateSpriteLoc(){
+        sprite.setX(actorCoord.getGuiX());
+        sprite.setY(actorCoord.getGuiY());
     }
 
     // Constructor
@@ -103,20 +119,25 @@ public class Actor {
     public String moveActor(String direction){
         switch (direction){
             case "n":
-                actorCoord.decrementX();
+                actorCoord.decrementY();
+                updateSpriteLoc();
                 return name + " moves north.";
             case "s":
-                actorCoord.incrementX();
+                actorCoord.incrementY();
+                updateSpriteLoc();
                 return name + " moves south.";
             case "e":
-                actorCoord.incrementY();
+                actorCoord.incrementX();
+                updateSpriteLoc();
                 return name + " moves east.";
             case "w":
-                actorCoord.decrementY();
+                actorCoord.decrementX();
+                updateSpriteLoc();
                 return name + " moves west.";
             default:
                 return name + " stays put.";
         }
+
     }
 
 //    public String displayHealthBar(){

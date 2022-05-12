@@ -29,15 +29,15 @@ public class Coord {
         updateGuiX();
     }
     public void decrementX(){
-        trueX++;
+        trueX--;
         updateGuiX();
     }
     public void incrementY(){
-        trueX++;
+        trueY++;
         updateGuiY();
     }
     public void decrementY(){
-        trueX++;
+        trueY--;
         updateGuiY();
     }
 

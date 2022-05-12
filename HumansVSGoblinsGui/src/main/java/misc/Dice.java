@@ -7,7 +7,8 @@ public class Dice {
     public Dice(){
         rand = new Random();
     }
-    public int rollD5()     { return rand.nextInt(5) + 1; }
-    public int rollD10()    { return rand.nextInt(10) + 1; }
-    public int rollD20()    { return rand.nextInt(20) + 1; }
+    public int rollD5()                         { return rand.nextInt(5) + 1; }
+    public int rollD10()                        { return rand.nextInt(10) + 1; }
+    public int rollD20()                        { return rand.nextInt(20) + 1; }
+    public int rollDWhatever(int whatever)      { return rand.nextInt(whatever); }
 }

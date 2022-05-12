@@ -1,4 +1,4 @@
-package com.example.gamegui;
+package misc;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
