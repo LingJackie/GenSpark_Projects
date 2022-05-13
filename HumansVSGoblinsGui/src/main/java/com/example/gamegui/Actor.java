@@ -24,7 +24,7 @@ public class Actor {
     Coord actorCoord;
 
     protected boolean playable;
-    protected boolean engagedInCombat;
+
 
     public String getHealthRatio()  { return currHealth +"/"+ maxHealth; }
     public String getName()         { return name; }
@@ -46,7 +46,7 @@ public class Actor {
 
     public boolean isDead()     { return currHealth <= 0; }
     public boolean isPlayable() { return playable; }
-    public boolean isEngagedInCombat() { return engagedInCombat; }
+
 
 
 
@@ -64,7 +64,6 @@ public class Actor {
         // Inits location at 0,0
         actorCoord = new Coord();
 
-        engagedInCombat = false;
 
         initSprite();
     }
@@ -85,7 +84,7 @@ public class Actor {
         return name + " has taken " + damage + " damage";
     }
     public String heal(int healedAmt){
-        currHealth += healedAmt;
+        currHealth = currHealth+healedAmt > maxHealth? maxHealth: currHealth+healedAmt;
         return name + " has healed for " + healedAmt + " health";
     }
 
@@ -96,7 +95,7 @@ public class Actor {
         return this.name +" attacks "+ someDude.getName() + "\n" + someDude.getName() +" takes " + totalDamageDealt + " damage.";
     }
 
-
+    // Updates an Actors Coords and Sprite location
     public String moveActor(String direction, TileNode[][] world){
         switch (direction){
             case "n":

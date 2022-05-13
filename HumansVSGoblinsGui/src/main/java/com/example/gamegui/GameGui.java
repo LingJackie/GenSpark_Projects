@@ -1,26 +1,14 @@
 package com.example.gamegui;
 
-import eventHandlers.PlayerMovementHandler;
+import eventHandlers.PlayerInputHandler;
 import inventory.InventoryNode;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import misc.Dice;
-
-import java.util.ArrayList;
-
-import static javafx.scene.input.KeyCode.*;
-
 
 
 public class GameGui extends Application {
@@ -67,8 +55,6 @@ public class GameGui extends Application {
         game1.spawnPlayer();
         game1.spawnGoblinHorde(5);
 
-//        Human player = game1.getPlayer();
-//        TileNode tile = game1.getGameWorld().getTile(24, 28);
 
 
         root = new Group();
@@ -90,12 +76,20 @@ public class GameGui extends Application {
 
 
         // Detects arrow keys for player movement
-        PlayerMovementHandler stuff = new PlayerMovementHandler(game1);
-        scene.setOnKeyPressed(stuff);
+        PlayerInputHandler plyrMvmt = new PlayerInputHandler(game1);
+        scene.setOnKeyPressed(plyrMvmt);
+
+//        // Detects num keys to select options during combat
+//        CombatHandler cmbt = new CombatHandler(game1);
+//        scene.setOnKeyPressed(cmbt);
 
 
+        Label label = new Label("this is Pane example");
 
-
+        // create a Pane
+        Rectangle combat = new Rectangle(sceneWidth,sceneHeight);
+        root.getChildren().add(combat);
+        combat.setVisible(false);
 
     }
 

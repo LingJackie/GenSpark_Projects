@@ -100,4 +100,10 @@ public class Coord {
     public String toString() {
         return "("+trueX+","+trueY+")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Coord c = (Coord) o;
+        return this.trueX == c.getTrueX() && this.trueY == c.getTrueY();
+    }
 }
