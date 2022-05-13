@@ -17,8 +17,9 @@ public class HVG {
 
     Dice dice;
 
-    public Human getPlayer()    {return player;}
-    public Group getMapGroup()  {return mapGroup;}
+    public Human getPlayer()        {return player;}
+    public Group getMapGroup()      {return mapGroup;}
+    public GameWorld getGameWorld() {return map;}
 
     public HVG(){
         dice = new Dice();

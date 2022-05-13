@@ -7,14 +7,9 @@ import misc.Coord;
 
 import java.io.FileNotFoundException;
 
-import static misc.Constants.spriteDimension;
+import static misc.Constants.SPRITE_DIMENSION;
 
 public class Actor {
-
-
-    protected final String DEAD_EMOJI ="\u2620";
-
-
     private String name;
 
     private int strength;// Determines damage dealt
@@ -23,30 +18,24 @@ public class Actor {
 
     private int attackPower;// Derived from strength and weapon stats
     private int maxHealth;// Derived from constitution and maybe armor
-
-
     private int currHealth;
 
-    protected boolean playable;
-    protected Rectangle sprite;
-
+    protected Rectangle sprite;// Holds actor's sprite
     Coord actorCoord;
+
+    protected boolean playable;
+    protected boolean engagedInCombat;
 
     public String getHealthRatio()  { return currHealth +"/"+ maxHealth; }
     public String getName()         { return name; }
     public int getDexterity()       { return dexterity; }
     public Coord getCoord()           { return actorCoord; }
+    public Rectangle getSprite()    { return sprite; }
 
-
-    // Checks if actor is dead and updates icon to a skull if they are
-    public String setDead(){
-//        icon = DEAD_EMOJI; GOTTA DO THIS-------------------------------------------------------------------
-        return name + " has died.";
-    }
     public void setName(String name)        { this.name = name;}
     public void setSprite(String imgName) throws FileNotFoundException {
         Image img = new Image(getClass().getResourceAsStream(imgName));
-        this.getSprite().setFill(new ImagePattern(img));
+        sprite.setFill(new ImagePattern(img));
     }
     public void setLoc(int x, int y){
         actorCoord.setX(x);
@@ -54,24 +43,12 @@ public class Actor {
         updateSpriteLoc();
     }
 
-    public Rectangle getSprite()    { return sprite; }
-
 
     public boolean isDead()     { return currHealth <= 0; }
     public boolean isPlayable() { return playable; }
+    public boolean isEngagedInCombat() { return engagedInCombat; }
 
 
-    private void initSprite(){
-        sprite = new Rectangle();
-        sprite.setWidth(spriteDimension);
-        sprite.setHeight(spriteDimension);
-        sprite.setFill(Color.BLACK);
-        updateSpriteLoc();
-    }
-    private void updateSpriteLoc(){
-        sprite.setX(actorCoord.getGuiX());
-        sprite.setY(actorCoord.getGuiY());
-    }
 
     // Constructor
     public Actor(String name, int strength, int constitution, int dexterity){
@@ -87,7 +64,19 @@ public class Actor {
         // Inits location at 0,0
         actorCoord = new Coord();
 
+        engagedInCombat = false;
+
         initSprite();
+    }
+
+    private void initSprite(){
+        sprite = new Rectangle(SPRITE_DIMENSION,SPRITE_DIMENSION);
+        sprite.setFill(Color.BLACK);
+        updateSpriteLoc();
+    }
+    private void updateSpriteLoc(){
+        sprite.setX(actorCoord.getGuiX());
+        sprite.setY(actorCoord.getGuiY());
     }
 
     public String takeDamage(int damage){
@@ -107,35 +96,35 @@ public class Actor {
         return this.name +" attacks "+ someDude.getName() + "\n" + someDude.getName() +" takes " + totalDamageDealt + " damage.";
     }
 
-    public String showStats(){
-        return "=== " + name + "'s Attributes ===\n" +
-                "Strength: " + strength + "\n" +
-                "Constitution: " + constitution + "\n" +
-                "Dexterity: " + dexterity+"\n" +
-                "Attack Power: " + attackPower + "\n";
-    }
 
-
-    public String moveActor(String direction){
+    public String moveActor(String direction, TileNode[][] world){
         switch (direction){
             case "n":
-                actorCoord.decrementY();
+                if(!actorCoord.decrementY(world)){// If actor tries to go out of bounds or to something that's impassable
+                    return name + " stays put at" + actorCoord;
+                }
                 updateSpriteLoc();
-                return name + " moves north.";
+                return name + " moves north to " + actorCoord;
             case "s":
-                actorCoord.incrementY();
+                if(!actorCoord.incrementY(world)){
+                    return name + " stays put at " + actorCoord;
+                }
                 updateSpriteLoc();
-                return name + " moves south.";
+                return name + " moves south to " + actorCoord;
             case "e":
-                actorCoord.incrementX();
+                if(!actorCoord.incrementX(world)){
+                    return name + " stays put at " + actorCoord;
+                }
                 updateSpriteLoc();
-                return name + " moves east.";
+                return name + " moves east to " + actorCoord;
             case "w":
-                actorCoord.decrementX();
+                if(!actorCoord.decrementX(world)){
+                    return name + " stays put at " + actorCoord;
+                }
                 updateSpriteLoc();
-                return name + " moves west.";
+                return name + " moves west to " + actorCoord;
             default:
-                return name + " stays put.";
+                return name + " stays put at " + actorCoord;
         }
 
     }

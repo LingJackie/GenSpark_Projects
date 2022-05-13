@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import misc.Constants;
 import misc.PerlinNoise;
 
-import static misc.Constants.spriteDimension;
+import static misc.Constants.SPRITE_DIMENSION;
 
 public class GameWorld {
 
@@ -21,6 +21,9 @@ public class GameWorld {
 
     public TileNode getTile(int x, int y){
         return worldMap[x][y];
+    }
+    public TileNode[][] getWorldMap(){
+        return worldMap;
     }
     public int length(){
         return worldMap.length;
@@ -45,33 +48,32 @@ public class GameWorld {
             for(int j = 0; j < width; j++) {
                 double noiseVal = PerlinNoise.noise(i * scale, j * scale, 7);// Generates number between -1 and 1
                 if (noiseVal < -.3) {// Water
-                    worldMap[i][j] = new TileNode("",i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,false);
                     worldMap[i][j].setTileColor("#4BB6EF");
                 } else if (noiseVal < -.25) {// Sand
-                    worldMap[i][j] = new TileNode("",i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                     worldMap[i][j].setTileColor("#C2B280");
                 } else if (noiseVal < 0) {// Grasslands
-                    worldMap[i][j] = new TileNode("",i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                     //worldMap[i][j].setTileColor("#398c0a");
                     Image img = new Image(getClass().getResourceAsStream("grass.jpg"));
                     worldMap[i][j].setTileTexture(img);
-
                 } else if (noiseVal < .2) {// Forest1
-                    worldMap[i][j] = new TileNode(Constants.SPADE_SYMBOL,i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                     worldMap[i][j].setTileColor("#327c09");
                 } else if (noiseVal < .3) {// Forest2
-                    worldMap[i][j] = new TileNode("",i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                     worldMap[i][j].setTileColor("#2c6d08");
                 } else if (noiseVal < .4) {// Low Hills
-                    worldMap[i][j] = new TileNode("",i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                     worldMap[i][j].setTileColor("#265d07");
                 } else if (noiseVal < .6) {// Tall Hills
-                    worldMap[i][j] = new TileNode("",i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                     worldMap[i][j].setTileColor("#567d46");
                 } else if (noiseVal <= 1) {// Mountain
-                    worldMap[i][j] = new TileNode("^",i,j,spriteDimension);
+                    worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                 }
-//                worldMap[i][j].setTileLabel(i +"," +j);
+                worldMap[i][j].setTileLabel(i +"," +j);
             }
         }
     }

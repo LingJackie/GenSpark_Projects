@@ -6,6 +6,6 @@ public class Constants {
     }
 
     // The dimensions of a spite and world tile
-    public static final int spriteDimension = 25;
+    public static final int SPRITE_DIMENSION = 25;
 
 }

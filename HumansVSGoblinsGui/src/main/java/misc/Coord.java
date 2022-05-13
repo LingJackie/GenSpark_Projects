@@ -1,5 +1,7 @@
 package misc;
-import static misc.Constants.spriteDimension;
+import com.example.gamegui.TileNode;
+
+import static misc.Constants.SPRITE_DIMENSION;
 
 public class Coord {
 
@@ -24,22 +26,7 @@ public class Coord {
         updateGuiY();
     }
 
-    public void incrementX(){
-        trueX++;
-        updateGuiX();
-    }
-    public void decrementX(){
-        trueX--;
-        updateGuiX();
-    }
-    public void incrementY(){
-        trueY++;
-        updateGuiY();
-    }
-    public void decrementY(){
-        trueY--;
-        updateGuiY();
-    }
+
 
     // CONSTRUCTORS
     public Coord(){
@@ -56,11 +43,61 @@ public class Coord {
 
     }
 
-    private void updateGuiX(){
-        this.guiX=trueX*spriteDimension;
+    public boolean incrementX(TileNode[][] world){
+        try {
+            TileNode tmp = world[trueX+1][trueY];// Checks if new coordinate is valid
+            if(!tmp.isTraversable()) return false;
+            trueX++;
+            updateGuiX();
+            return true;
+        }catch(IndexOutOfBoundsException e){
+            return false;
+        }
     }
-    private void updateGuiY(){
-        this.guiY=trueY*spriteDimension;
+    public boolean decrementX(TileNode[][] world){
+        try {
+            TileNode tmp = world[trueX-1][trueY];// Checks if new coordinate is valid
+            if(!tmp.isTraversable()) return false;
+            trueX--;
+            updateGuiX();
+            return true;
+        }catch(IndexOutOfBoundsException e){
+            return false;
+        }
+    }
+    public boolean incrementY(TileNode[][] world){
+        try {
+            TileNode tmp = world[trueX][trueY+1];// Checks if new coordinate is valid
+            if(!tmp.isTraversable()) return false;
+            trueY++;
+            updateGuiY();
+            return true;
+        }catch(IndexOutOfBoundsException e){
+            return false;
+        }
+    }
+    public boolean decrementY(TileNode[][] world){
+        try {
+            TileNode tmp = world[trueX][trueY-1];// Checks if new coordinate is valid
+            if(!tmp.isTraversable()) return false;
+            trueY--;
+            updateGuiY();
+            return true;
+        }catch(IndexOutOfBoundsException e){
+            return false;
+        }
     }
 
+
+    private void updateGuiX(){
+        this.guiX=trueX*SPRITE_DIMENSION;
+    }
+    private void updateGuiY(){
+        this.guiY=trueY*SPRITE_DIMENSION;
+    }
+
+    @Override
+    public String toString() {
+        return "("+trueX+","+trueY+")";
+    }
 }

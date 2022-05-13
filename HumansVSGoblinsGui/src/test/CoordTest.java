@@ -1,17 +1,30 @@
 
+import com.example.gamegui.TileNode;
+import javafx.embed.swing.JFXPanel;
 import misc.Coord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static misc.Constants.SPRITE_DIMENSION;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CoordTest {
 
     Coord testCoord;
+    TileNode[][] test2DArr;
+    JFXPanel fxPanel;
 
     @BeforeEach
     void setup(){
-        testCoord = new Coord();
+        fxPanel = new JFXPanel();// Having this fixes the 'Toolkit not initialized' exception for some reason
+
+        testCoord = new Coord();// Defaults coordinate to 0,0
+        test2DArr = new TileNode[2][2];
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++) {
+                test2DArr[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
+            }
+        }
     }
 
     @Test
@@ -28,22 +41,35 @@ class CoordTest {
 
     @Test
     void test_IncrementX() {
-        testCoord.incrementX();
+        assertTrue(testCoord.incrementX(test2DArr));
+        assertEquals(1, testCoord.getTrueX());
         assertEquals(25, testCoord.getGuiX());
+
+        assertFalse(testCoord.incrementX(test2DArr));
+        assertEquals(1, testCoord.getTrueX());
+        assertEquals(25, testCoord.getGuiX());
+
     }
     @Test
     void test_IncrementY() {
-        testCoord.incrementY();
+        assertTrue(testCoord.incrementY(test2DArr));
+        assertEquals(1, testCoord.getTrueY());
+        assertEquals(25, testCoord.getGuiY());
+
+        assertFalse(testCoord.incrementY(test2DArr));
+        assertEquals(1, testCoord.getTrueY());
         assertEquals(25, testCoord.getGuiY());
     }
     @Test
     void test_DecrementX() {
-        testCoord.decrementX();
-        assertEquals(-25, testCoord.getGuiX());
+        assertFalse(testCoord.decrementX(test2DArr));
+        assertEquals(0, testCoord.getTrueX());
+        assertEquals(0, testCoord.getGuiX());
     }
     @Test
     void test_DecrementY() {
-        testCoord.decrementY();
-        assertEquals(-25, testCoord.getGuiY());
+        assertFalse(testCoord.decrementY(test2DArr));
+        assertEquals(0, testCoord.getTrueY());
+        assertEquals(0, testCoord.getGuiY());
     }
 }

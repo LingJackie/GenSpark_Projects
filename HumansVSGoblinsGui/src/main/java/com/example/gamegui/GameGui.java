@@ -20,7 +20,7 @@ import misc.Dice;
 import java.util.ArrayList;
 
 import static javafx.scene.input.KeyCode.*;
-import static misc.Constants.spriteDimension;
+
 
 
 public class GameGui extends Application {
@@ -67,6 +67,10 @@ public class GameGui extends Application {
         game1.spawnPlayer();
         game1.spawnGoblinHorde(5);
 
+//        Human player = game1.getPlayer();
+//        TileNode tile = game1.getGameWorld().getTile(24, 28);
+
+
         root = new Group();
         root.getChildren().add(game1.getMapGroup());
         Scene scene = new Scene( root, sceneWidth, sceneHeight);
@@ -86,7 +90,8 @@ public class GameGui extends Application {
 
 
         // Detects arrow keys for player movement
-        scene.setOnKeyPressed(new PlayerMovementHandler(game1));
+        PlayerMovementHandler stuff = new PlayerMovementHandler(game1);
+        scene.setOnKeyPressed(stuff);
 
 
 
