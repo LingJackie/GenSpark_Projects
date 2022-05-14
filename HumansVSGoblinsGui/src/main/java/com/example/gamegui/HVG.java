@@ -1,5 +1,7 @@
 package com.example.gamegui;
 
+import health.HealthBar;
+import health.HealthNode;
 import javafx.scene.Group;
 import misc.Dice;
 
@@ -8,21 +10,24 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
+import static misc.Constants.SPRITE_DIMENSION;
+
 public class HVG {
-    private final int n = 50;
-    private final int m = 28;
+    private final int n = 40;
+    private final int m = 30;
 
     private Group mapGroup;// Gui component that holds and displays the game map
     private GameWorld map;
     private boolean gameRunning;
-    
+
+    private ArrayList<Goblin> goblinHorde;
     private boolean engagedInCombat;
     private Goblin engagedEnemy; // Current combat engaged goblin
     private Queue<Actor> combatTurnQueue;
     private int turns;  // Number of turns spent in combat(Resets after each encounter)
     
     private Human player;
-    private ArrayList<Goblin> goblinHorde;
+    HealthBar playerHealthBar;
 
     Dice dice;
 
@@ -34,10 +39,14 @@ public class HVG {
     public Queue<Actor> getCombatTurnQueue()    {return combatTurnQueue;}
     public int getTurns()                       {return turns;}
     public Goblin getEngagedEnemy()             {return engagedEnemy;}
+    public HealthBar getPlayerHealthBar()       {return playerHealthBar;}
 
     public int incrementTurns()                 {return ++turns;}
 
     public boolean isEngagedInCombat()  {return engagedInCombat;}
+
+
+
 
     public HVG(){
         dice = new Dice();
@@ -66,6 +75,10 @@ public class HVG {
         player = new Human("jackie",5,5,5,true);
         player.setLoc(n/2,m/2);
         mapGroup.getChildren().add(player.getSprite());// Adds sprite to the map
+
+        // Adds player health bar to top left corner
+        playerHealthBar = new HealthBar(SPRITE_DIMENSION,player);
+        mapGroup.getChildren().add(playerHealthBar.getWorldHealthBarGui());
     }
     // Spawns goblins in random locations
     public void spawnGoblinHorde(int hordeSize){
@@ -74,6 +87,12 @@ public class HVG {
             goblinHorde.get(i).setLoc(dice.rollDWhatever(n),dice.rollDWhatever(m));
             mapGroup.getChildren().add(goblinHorde.get(i).getSprite());// Adds sprite to the map
         }
+    }
+    public void displayPlayerHealth(){
+
+//        root.getChildren().add(playerHealth.getWorldHealthBarGui());
+//        game1.getPlayer().takeDamage(12);
+//        playerHealth.updateHealthBar(game1.getPlayer());
     }
 
 
@@ -99,6 +118,9 @@ public class HVG {
         String message = "";
         if(someDude!=null && someDude.isDead()){
             endCombat();
+            try{
+                someDude.setSprite("tombstone.png");
+            }catch(Exception e){}
             message += someDude.getName() + " has died.";
             if(someDude.isPlayable()){
                 gameRunning = false;
@@ -127,23 +149,4 @@ public class HVG {
         return engagedEnemy.attack(player, dice.rollD10()) + " on turn " + ++turns;
     }
 
-    public void combatLoop(){
-        while(engagedInCombat){
-            System.out.println(player.getHealthRatio());// Displays player health bar
-            System.out.println(engagedEnemy.getHealthRatio());// Displays goblin health bar
-
-            // Checks whose turn it is
-            if(combatTurnQueue.peek().isPlayable()){
-                //System.out.println(playerCombatTurn());
-            }else{
-                System.out.println(goblinCombatTurn());
-            }
-            combatTurnQueue.add(combatTurnQueue.remove());
-
-            System.out.println(deathHandler(player));// Checks if player has died
-            System.out.println(deathHandler(engagedEnemy));// Checks if goblin has died
-
-        }
-
-    }
 }

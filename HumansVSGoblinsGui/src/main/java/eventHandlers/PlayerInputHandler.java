@@ -72,9 +72,10 @@ public class PlayerInputHandler implements EventHandler<KeyEvent>{
                 System.out.println(game.initCombat(game.getDice().rollD20(), game.getDice().rollD20()));
                 game.incrementTurns();
 
-                System.out.println(game.getPlayer() +":"+ game.getPlayer().getHealthRatio());// Displays player health bar
-                System.out.println(game.getEngagedEnemy() +":"+game.getEngagedEnemy().getHealthRatio());// Displays goblin health bar
-                //game.combatLoop();
+                // Displays health
+                System.out.println(game.getPlayer() +":"+ game.getPlayer().getHealthRatio());
+                System.out.println(game.getEngagedEnemy() +":"+game.getEngagedEnemy().getHealthRatio());
+
             }
         }else if(game.isEngagedInCombat()){
 
@@ -83,10 +84,14 @@ public class PlayerInputHandler implements EventHandler<KeyEvent>{
             }else{
                 System.out.println(game.goblinCombatTurn());
             }
-            System.out.println(game.getPlayer() +":"+ game.getPlayer().getHealthRatio());// Displays player health bar
-            System.out.println(game.getEngagedEnemy() +":"+game.getEngagedEnemy().getHealthRatio());// Displays goblin health bar
+            // Updates player health bar in gui
+            game.getPlayerHealthBar().updateHealthBar(game.getPlayer());
 
+            // Prints out both player and goblins health
+            System.out.println(game.getPlayer() +":"+ game.getPlayer().getHealthRatio());
+            System.out.println(game.getEngagedEnemy() +":"+game.getEngagedEnemy().getHealthRatio());
 
+            // Moves on to the next Actor in queue
             game.getCombatTurnQueue().add(game.getCombatTurnQueue().remove());
 
             System.out.println(game.deathHandler(game.getPlayer()));// Ends combat and game if player has died

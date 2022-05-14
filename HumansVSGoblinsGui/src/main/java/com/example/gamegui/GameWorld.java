@@ -55,9 +55,9 @@ public class GameWorld {
                     worldMap[i][j].setTileColor("#C2B280");
                 } else if (noiseVal < 0) {// Grasslands
                     worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
-                    //worldMap[i][j].setTileColor("#398c0a");
-                    Image img = new Image(getClass().getResourceAsStream("grass.jpg"));
-                    worldMap[i][j].setTileTexture(img);
+                    worldMap[i][j].setTileColor("#398c0a");
+//                    Image img = new Image(getClass().getResourceAsStream("grass.jpg"));
+//                    worldMap[i][j].setTileTexture(img);
                 } else if (noiseVal < .2) {// Forest1
                     worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                     worldMap[i][j].setTileColor("#327c09");
@@ -73,7 +73,7 @@ public class GameWorld {
                 } else if (noiseVal <= 1) {// Mountain
                     worldMap[i][j] = new TileNode(i,j,SPRITE_DIMENSION,true);
                 }
-                worldMap[i][j].setTileLabel(i +"," +j);
+//                worldMap[i][j].setTileLabel(i +"," +j);
             }
         }
     }

@@ -1,6 +1,8 @@
 package com.example.gamegui;
 
 import eventHandlers.PlayerInputHandler;
+import health.HealthBar;
+import health.HealthNode;
 import inventory.InventoryNode;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -10,11 +12,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import static misc.Constants.SPRITE_DIMENSION;
+
 
 public class GameGui extends Application {
 
-    private final double sceneWidth = 1024;
-    private final double sceneHeight = 768;
+    private final double sceneWidth = 960;
+    private final double sceneHeight = 720;
 
     private final int n = 50;
     private final int m = 28;
@@ -52,11 +56,12 @@ public class GameGui extends Application {
     public void start(Stage primaryStage) {
         HVG game1 = new HVG();
         game1.setUpGameWorldGUI();
-        game1.spawnPlayer();
         game1.spawnGoblinHorde(5);
+        game1.spawnPlayer();
 
 
 
+        //Fires up the GUI
         root = new Group();
         root.getChildren().add(game1.getMapGroup());
         Scene scene = new Scene( root, sceneWidth, sceneHeight);
@@ -66,26 +71,20 @@ public class GameGui extends Application {
 //        game1.getMapGroup().setVisible(false);
 
 
-        Rectangle r2 = new Rectangle();
-        r2.setX(10);
-        r2.setY(10);
-        r2.setWidth(100);
-        r2.setHeight(25);
-        root.getChildren().add(r2);
-        r2.setFill(Color.RED);
 
 
-        // Detects arrow keys for player movement
+
+        // Detects arrow keys for player movement and number keys for combat actions
         PlayerInputHandler plyrMvmt = new PlayerInputHandler(game1);
         scene.setOnKeyPressed(plyrMvmt);
 
-//        // Detects num keys to select options during combat
-//        CombatHandler cmbt = new CombatHandler(game1);
-//        scene.setOnKeyPressed(cmbt);
+
+
+
+
 
 
         Label label = new Label("this is Pane example");
-
         // create a Pane
         Rectangle combat = new Rectangle(sceneWidth,sceneHeight);
         root.getChildren().add(combat);

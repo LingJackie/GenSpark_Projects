@@ -25,12 +25,13 @@ public class Actor {
 
     protected boolean playable;
 
-
-    public String getHealthRatio()  { return currHealth +"/"+ maxHealth; }
-    public String getName()         { return name; }
-    public int getDexterity()       { return dexterity; }
-    public Coord getCoord()           { return actorCoord; }
-    public Rectangle getSprite()    { return sprite; }
+    public int getCurrHealth()      {return currHealth;}
+    public int getMaxHealth()       {return maxHealth;}
+    public String getHealthRatio()  {return currHealth +"/"+ maxHealth;}
+    public String getName()         {return name;}
+    public int getDexterity()       {return dexterity;}
+    public Coord getCoord()         {return actorCoord;}
+    public Rectangle getSprite()    {return sprite;}
 
     public void setName(String name)        { this.name = name;}
     public void setSprite(String imgName) throws FileNotFoundException {
@@ -127,27 +128,6 @@ public class Actor {
         }
 
     }
-
-//    public String displayHealthBar(){
-//        double ratio = (double)currHealth/maxHealth;
-//        String bar = "HP:"+ ColorAndEmoji.ANSI_RED;
-//        if(ratio <= .14){
-//            bar+="#"+ ColorAndEmoji.ANSI_RESET+"++++++";
-//        }else if(ratio <= .28){
-//            bar+="##"+ ColorAndEmoji.ANSI_RESET+"+++++";
-//        }else if(ratio <= .42){
-//            bar+="###"+ ColorAndEmoji.ANSI_RESET+"++++";
-//        }else if(ratio <= .56){
-//            bar+="####"+ ColorAndEmoji.ANSI_RESET+"+++";
-//        }else if(ratio <= .7){
-//            bar+="#####"+ ColorAndEmoji.ANSI_RESET+"++";
-//        }else if(ratio <= .84){
-//            bar+="######"+ ColorAndEmoji.ANSI_RESET+"+";
-//        }else{
-//            bar+="#######"+ ColorAndEmoji.ANSI_RESET;
-//        }
-//       return this.toString() + " " + name +"\n"+bar+" "+getHealthRatio();
-//    }
 
     @Override
     public String toString() {
