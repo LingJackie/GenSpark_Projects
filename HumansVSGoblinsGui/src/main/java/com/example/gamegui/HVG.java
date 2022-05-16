@@ -1,14 +1,12 @@
 package com.example.gamegui;
 
 import health.HealthBar;
-import health.HealthNode;
 import javafx.scene.Group;
 import misc.Dice;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+
 
 import static misc.Constants.SPRITE_DIMENSION;
 
@@ -39,6 +37,7 @@ public class HVG {
     public Queue<Actor> getCombatTurnQueue()    {return combatTurnQueue;}
     public int getTurns()                       {return turns;}
     public Goblin getEngagedEnemy()             {return engagedEnemy;}
+    public ArrayList<Goblin> getGoblinHorde()   {return goblinHorde;}
     public HealthBar getPlayerHealthBar()       {return playerHealthBar;}
 
     public int incrementTurns()                 {return ++turns;}

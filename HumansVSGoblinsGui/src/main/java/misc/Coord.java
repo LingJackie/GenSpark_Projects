@@ -25,6 +25,12 @@ public class Coord {
         this.trueY=y;
         updateGuiY();
     }
+    public void setLoc(int x,int y){
+        this.trueX=x;
+        this.trueY=y;
+        updateGuiX();
+        updateGuiY();
+    }
 
 
 

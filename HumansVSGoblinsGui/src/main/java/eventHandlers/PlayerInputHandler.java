@@ -1,15 +1,11 @@
 package eventHandlers;
 
-import com.example.gamegui.Actor;
-import com.example.gamegui.Goblin;
+
 import com.example.gamegui.HVG;
-import com.example.gamegui.Human;
 import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import misc.Dice;
 
-import java.util.Queue;
 
 
 public class PlayerInputHandler implements EventHandler<KeyEvent>{

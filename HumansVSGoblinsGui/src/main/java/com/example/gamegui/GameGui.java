@@ -1,17 +1,13 @@
 package com.example.gamegui;
 
 import eventHandlers.PlayerInputHandler;
-import health.HealthBar;
-import health.HealthNode;
 import inventory.InventoryNode;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
 import static misc.Constants.SPRITE_DIMENSION;
 
 
@@ -72,8 +68,6 @@ public class GameGui extends Application {
 
 
 
-
-
         // Detects arrow keys for player movement and number keys for combat actions
         PlayerInputHandler plyrMvmt = new PlayerInputHandler(game1);
         scene.setOnKeyPressed(plyrMvmt);
@@ -84,12 +78,14 @@ public class GameGui extends Application {
 
 
 
-        Label label = new Label("this is Pane example");
-        // create a Pane
-        Rectangle combat = new Rectangle(sceneWidth,sceneHeight);
-        root.getChildren().add(combat);
-        combat.setVisible(false);
-
+//        Label label = new Label("this is Pane example");
+//        // create a Pane
+//        Rectangle combat = new Rectangle(sceneWidth,sceneHeight);
+//        root.getChildren().add(combat);
+//        combat.setVisible(false);
+        CombatGui combatGui = new CombatGui((int)sceneWidth,(int)sceneHeight,game1.getPlayer(),game1.getGoblinHorde().get(0));
+        root.getChildren().add(combatGui.getCombatScreen());
+//        combatGui.getCombatScreen().setVisible(false);
     }
 
     public static void main(String[] args) {

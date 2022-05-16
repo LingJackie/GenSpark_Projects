@@ -39,8 +39,7 @@ public class Actor {
         sprite.setFill(new ImagePattern(img));
     }
     public void setLoc(int x, int y){
-        actorCoord.setX(x);
-        actorCoord.setY(y);
+        actorCoord.setLoc(x,y);
         updateSpriteLoc();
     }
 
