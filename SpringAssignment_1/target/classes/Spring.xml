@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> <!-- bean definitions here -->
+
+
+    <!--    Constructor Injection-->
+    <bean id="Address" class="org.example.Address">
+        <constructor-arg index="0" value="Plano"/>
+        <constructor-arg index="1" value="Texas"/>
+        <constructor-arg index="2" value="US"/>
+        <constructor-arg index="3" value="75025"/>
+    </bean>
+
+    <bean id="Phone1" class="org.example.Phone">
+        <constructor-arg index="0" value="6463451334"/>
+    </bean>
+    <bean id="Phone2" class="org.example.Phone">
+        <constructor-arg index="0" value="9463421334"/>
+    </bean>
+
+    <!--    Property Injection-->
+    <bean id="Student" class="org.example.Student">
+        <property name="id" value="1337" />
+        <property name="name" value="jackie" />
+        <property name="ph">
+            <list>
+                <ref bean = "Phone1"/>
+                <ref bean = "Phone2"/>
+            </list>
+        </property>
+        <property name="add" ref="Address" />
+    </bean>
+
+</beans>
